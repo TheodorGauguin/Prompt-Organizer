@@ -1,25 +1,3 @@
-function copyToClipboard(text, tooltip) {
-  const el = document.createElement('textarea');
-  el.value = text;
-  el.setAttribute('readonly', '');
-  el.style.position = 'absolute';
-  el.style.left = '-9999px';
-  document.body.appendChild(el);
-  el.select();
-  const successful = document.execCommand('copy');
-  document.body.removeChild(el);
-
-  // Show the tooltip
-  if (successful) {
-    tooltip.style.visibility = 'visible';
-    tooltip.style.opacity = '1';
-    setTimeout(() => {
-      tooltip.style.visibility = 'hidden';
-      tooltip.style.opacity = '0';
-    }, 1500);
-  }
-}
-
 // Save button event listener
 document.getElementById('save-button').addEventListener('click', () => {
   const promptInput = document.getElementById('prompt-input').value;
@@ -77,13 +55,13 @@ function loadFolderContent() {
       wrapper.appendChild(tooltip);
 
       li.addEventListener('click', () => {
-        copyToClipboard(prompt, tooltip);
+        insertTextToInput(prompt);
       });
+      
       promptList.appendChild(li);
     });
   });
 }
-
 
 // Delete all button event listener
 document.getElementById('delete-all-button').addEventListener('click', () => {
@@ -93,5 +71,31 @@ document.getElementById('delete-all-button').addEventListener('click', () => {
   });
 });
 
+function getActiveElementDetails(callback) {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.sendMessage(tabs[0].id, { type: 'getActiveElementDetails' }, (response) => {
+      callback(response);
+    });
+  });
+}
+
+function insertTextToInput(text, activeElementInfo) {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.sendMessage(tabs[0].id, { type: 'insertText', text: text, ...activeElementInfo });
+  });
+}
+
+// Call getActiveElementDetails when the popup is opened
+getActiveElementDetails((activeElementInfo) => {
+  // Update the click event listener in the loadFolderContent function to use the new insertTextToInput function with activeElementInfo
+  const liElements = document.querySelectorAll('#prompt-list li');
+  liElements.forEach((li) => {
+    li.addEventListener('click', () => {
+      insertTextToInput(li.textContent, activeElementInfo);
+    });
+  });
+});
+
 // Initialize folders
 loadFolders();
+

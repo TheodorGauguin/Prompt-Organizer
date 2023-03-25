@@ -5,12 +5,23 @@
     <title>Prompt Organizer</title>
   </head>
   <body>
-    <div id="app">
-      <label for="prompt-input">Prompt:</label>
-      <input type="text" id="prompt-input">
-      <label for="folder-input">Folder:</label>
-      <input type="text" id="folder-input">
+    <button id="delete-all-button">Delete All</button>
+    <div id="new-prompt">
+      <div>
+        <label for="prompt-input">Prompt name:</label>
+        <input type="text" id="prompt-input" />
+      </div>
+      <div>
+        <label for="folder-input">Folder:</label>
+        <input type="text" id="folder-input" />
+      </div>
       <button id="save-button">Save</button>
+    </div>
+    <hr>
+    <div id="prompt-folders">
+      <label for="folder-select">Select folder:</label>
+      <select id="folder-select"></select>
+      <ul id="prompt-list"></ul>
     </div>
     <script src="popup.js"></script>
   </body>

@@ -1,0 +1,14 @@
+{
+  "manifest_version": 2,
+  "name": "Prompt Organizer",
+  "version": "1.0",
+  "description": "A Chromium extension to save and organize prompts into folders.",
+  "permissions": ["storage"],
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "48": "icon.png"
+  }
+}
